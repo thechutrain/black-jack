@@ -1,0 +1,22 @@
+{
+  "name": "typescript-boilerplate",
+  "version": "1.0.0",
+  "description": "TypeScript Boilerplate ",
+  "main": "src/index.ts",
+  "engines": {
+    "node": ">= 10.14 <11"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "tsc": ""
+  },
+  "keywords": [
+    "TypeScript",
+    "Boilerplate"
+  ],
+  "author": "alancodes@gmail.com",
+  "license": "ISC",
+  "devDependencies": {
+    "typescript": "^3.2.2"
+  }
+}

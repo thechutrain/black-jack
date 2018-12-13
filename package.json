@@ -8,7 +8,8 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "tsc": ""
+    "tsc": "",
+    "format": "prettier \"src/**\" --write"
   },
   "keywords": [
     "TypeScript",
@@ -17,6 +18,7 @@
   "author": "alancodes@gmail.com",
   "license": "ISC",
   "devDependencies": {
+    "prettier": "^1.15.3",
     "typescript": "^3.2.2"
   }
 }

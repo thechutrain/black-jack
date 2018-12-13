@@ -1,7 +1,7 @@
 enum Events {
-	mouseClick,
-	hover,
-	focusOn
+  mouseClick,
+  hover,
+  focusOn,
 }
 
 console.log(Events[Events.hover]);

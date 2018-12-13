@@ -9,7 +9,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "tsc": "",
-    "format": "prettier \"src/**\" --write"
+    "format": "prettier \"src/**\" --write",
+    "tslint": "tslint --format stylish --project tsconfig.json",
+    "tslint:fix": "tslint --format stylish --project tsconfig.json --fix"
   },
   "keywords": [
     "TypeScript",
@@ -19,6 +21,10 @@
   "license": "ISC",
   "devDependencies": {
     "prettier": "^1.15.3",
+    "tslint": "^5.11.0",
+    "tslint-config-prettier": "^1.17.0",
+    "tslint-eslint-rules": "^5.4.0",
+    "tslint-microsoft-contrib": "^6.0.0",
     "typescript": "^3.2.2"
   }
 }

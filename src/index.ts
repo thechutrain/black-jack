@@ -4,4 +4,9 @@ enum Events {
   focusOn,
 }
 
+let a = 'alan';
+function be() {
+  console.log();
+}
+
 console.log(Events[Events.hover]);

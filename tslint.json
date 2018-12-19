@@ -6,7 +6,7 @@
     "tslint-config-prettier"
   ],
   "linterOptions": {
-    "exclude": ["node_modules/**"]
+    "exclude": ["*"]
   },
   "rules": {
     "mocha-no-side-effect-code": false,
@@ -20,7 +20,7 @@
     "typedef": [
       true,
       "parameter",
-      "arrow-parameter",
+      // "arrow-parameter",
       "property-declaration",
       "member-variable-declaration"
     ],

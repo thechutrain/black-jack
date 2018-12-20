@@ -8,6 +8,7 @@ import { IDeck } from './deck';
 import { GameDeck } from './gamedeck';
 import { IView } from './view';
 import { debug } from 'util';
+import { Hand } from './hand';
 
 export class Game {
   public deck: IDeck;
@@ -24,15 +25,13 @@ export class Game {
     this.deck.shuffle();
 
     // Deal the cards.
-    this.state.players.forEach((cards, player) => {
-      cards.push(this.deck.draw(), this.deck.draw());
-    });
+    this.state = this.state.dealCards();
     this.view.refresh(this.state);
 
     // Make the turns.
     let promiseChain = Promise.resolve();
-    for (const player of this.state.players.keys()) {
-      promiseChain = promiseChain.then(() => this.doTurn(player));
+    for (const hand of this.state.getPlayerHands()) {
+      promiseChain = promiseChain.then(() => this.doTurn(hand));
     }
 
     promiseChain = promiseChain.then(() => {
@@ -43,22 +42,22 @@ export class Game {
     return promiseChain;
   }
 
-  private doTurn(player: IPlayer): Promise<void> {
+  private doTurn(hand: Hand): Promise<void> {
     // console.log(handValue(this.state.players.get(player) as Card[]));
 
-    if (this.state.getPlayerHandSum(player) > 21) {
+    if (hand.getValue() > 21) {
       return Promise.resolve();
     }
 
-    return player.act(this.state.toPlayerState(player)).then(action => {
+    return hand.player.act(this.state.toPlayerState(hand)).then(action => {
       if (action === Action.STAND) {
         return Promise.resolve();
       }
 
-      this.state = State.APPLY_ACTION(this.deck, this.state, player, action);
+      this.state = this.state.applyAction(this.deck, this.state, hand, action);
       this.view.refresh(this.state);
 
-      return this.doTurn(player);
+      return this.doTurn(hand);
     });
   }
 }

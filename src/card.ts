@@ -47,9 +47,15 @@ export const ALL_SUITS: Suit[] = [
 export class Card {
   public value: CardValue;
   public suit: Suit;
+  public faceUp: boolean;
 
-  constructor(value: CardValue, suit: Suit) {
+  constructor(value: CardValue, suit: Suit, faceUp: boolean = false) {
     this.value = value;
     this.suit = suit;
+    this.faceUp = faceUp;
+  }
+
+  public flipFaceUp(): Card {
+    return new Card(this.value, this.suit, true);
   }
 }

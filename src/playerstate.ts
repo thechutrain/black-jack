@@ -1,13 +1,14 @@
-import { Card } from './card';
+// import { Card } from './card';
+// import { HiddenCard } from './hiddencard';
+import { Hand } from './hand';
+// import { PlayerHand } from './playerHand';
 
 export class PlayerState {
-  public playerCards: Card[];
+  public playerCards: Hand;
+  public otherPlayerCards: Hand[];
 
-  constructor(cards: Card[]) {
-    this.playerCards = cards;
-  }
-
-  public myCards(): Card[] {
-    return this.playerCards;
+  constructor(playerCards: Hand, otherPlayerCards: Hand[]) {
+    this.playerCards = playerCards;
+    this.otherPlayerCards = otherPlayerCards;
   }
 }

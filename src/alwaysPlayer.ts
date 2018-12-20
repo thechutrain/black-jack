@@ -1,6 +1,5 @@
 import { IPlayer } from './player';
 import { Action } from './action';
-import { PlayerState } from './playerstate';
 
 export class AlwaysPlayer implements IPlayer {
   private playerAction: Action;
@@ -11,5 +10,9 @@ export class AlwaysPlayer implements IPlayer {
 
   public act(): Promise<Action> {
     return Promise.resolve(this.playerAction);
+  }
+
+  public name(): string {
+    return `Always ${this.playerAction}`;
   }
 }

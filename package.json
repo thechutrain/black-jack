@@ -7,11 +7,14 @@
     "node": ">= 10.14 <11"
   },
   "scripts": {
+    "dev": "parcel src/index.html",
     "test": "jest",
     "test:c": "jest --coverage",
     "test:w": "jest --watch",
+    "build": "rimraf dist/ && parcel build src/index.html",
+    "prod": "npm run build && npm run serve-prod",
+    "serve-prod": "http-server dist/",
     "format": "prettier \"src/**\" --write",
-    "build": "tsc",
     "tslint": "tslint --format stylish --project tsconfig.json",
     "tslint:fix": "tslint --format stylish --project tsconfig.json --fix"
   },
@@ -23,8 +26,11 @@
   "license": "ISC",
   "devDependencies": {
     "@types/jest": "^23.3.10",
+    "http-server": "^0.11.1",
     "jest": "^23.6.0",
+    "parcel": "^1.11.0",
     "prettier": "^1.15.3",
+    "rimraf": "^2.6.2",
     "ts-jest": "^23.10.5",
     "ts-node": "^7.0.1",
     "tslint": "^5.11.0",

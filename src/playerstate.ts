@@ -8,6 +8,6 @@ export class PlayerState {
   }
 
   public myCards(): Card[] {
-    return [];
+    return this.playerCards;
   }
 }

@@ -4,28 +4,30 @@ import { State } from './state';
 import { IPlayer } from './player';
 import { handValue } from './handvalue';
 import { PlayerState } from './playerstate';
-import { Deck } from './deck';
+import { IDeck } from './deck';
+import { GameDeck } from './gamedeck';
 import { IView } from './view';
+import { debug } from 'util';
 
 export class Game {
-  public deck: Deck;
+  public deck: IDeck;
   public state: State;
   public view: IView;
 
-  constructor(state: State, view: IView) {
+  constructor(deck: IDeck, state: State, view: IView) {
     this.state = state;
-    this.deck = Deck.CREATE_52();
+    this.deck = deck;
     this.view = view;
   }
 
   public play(): Promise<void> {
     this.deck.shuffle();
-    this.view.refresh(this.state);
 
     // Deal the cards.
     this.state.players.forEach((cards, player) => {
       cards.push(this.deck.draw(), this.deck.draw());
     });
+    this.view.refresh(this.state);
 
     // Make the turns.
     let promiseChain = Promise.resolve();
@@ -39,11 +41,12 @@ export class Game {
   private doTurn(player: IPlayer): Promise<void> {
     // console.log(handValue(this.state.players.get(player) as Card[]));
 
+    if (handValue(this.state.players.get(player) as Card[]) > 21) {
+      return Promise.resolve();
+    }
+
     return player.act(this.state.toPlayerState(player)).then(action => {
-      if (
-        action === Action.STAND ||
-        handValue(this.state.players.get(player) as Card[]) > 21
-      ) {
+      if (action === Action.STAND) {
         return Promise.resolve();
       }
 

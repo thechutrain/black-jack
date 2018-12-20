@@ -1,6 +1,5 @@
 // import Game from '../';
 
-import { Deck } from '../deck';
 import { handValue } from '../handvalue';
 import { Card, CardValue, Suit } from '../card';
 

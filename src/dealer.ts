@@ -10,7 +10,6 @@ export class Dealer implements IPlayer {
 
   public act(playerState: PlayerState): Promise<Action> {
     return new Promise<Action>((resolve, reject) => {
-      console.log(playerState.myCards());
       if (handValue(playerState.myCards()) >= 17) {
         resolve(Action.STAND);
       } else {

@@ -7,6 +7,7 @@ import { handValue } from './handvalue';
 import { HandState } from './handstate';
 import { Dealer } from './dealer';
 import { prependListener } from 'cluster';
+import { SlowDelegatingPlayer } from './slowdelegatingplayer';
 
 export class State {
   public players: Map<IPlayer, Card[]>;
@@ -30,7 +31,7 @@ export class State {
       playersMap.set(player, []);
       handStates.set(player, HandState.UNKNOWN);
     });
-    const dealer = new Dealer();
+    const dealer = new SlowDelegatingPlayer(new Dealer(), 1000);
     playersMap.set(dealer, []);
     handStates.set(dealer, HandState.UNKNOWN);
 
@@ -65,6 +66,27 @@ export class State {
     }
   }
 
+  public toEndGameState(): State {
+    const players = new Map(this.players);
+    const handStates = new Map(this.handStates);
+    const dealerHandSum = this.getDealerHandSum();
+    players.forEach((cards, player) => {
+      if (player === this.dealer) {
+        return;
+      }
+      if (this.getHandState(player) === HandState.BUSTED) {
+        return;
+      }
+      const newState =
+        this.getPlayerHandSum(player) > dealerHandSum
+          ? HandState.WON
+          : HandState.LOST_TO_DEALER;
+      handStates.set(player, newState);
+    });
+
+    return new State(players, handStates, this.dealer);
+  }
+
   public toPlayerState(player: IPlayer): PlayerState {
     const playerCards = this.players.get(player) as Card[];
 
@@ -91,6 +113,10 @@ export class State {
     });
 
     return sum;
+  }
+
+  public getDealerHandSum(): number {
+    return this.getPlayerHandSum(this.dealer);
   }
 
   private getPlayerHand(player: IPlayer): Card[] {

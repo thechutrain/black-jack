@@ -35,13 +35,18 @@ export class Game {
       promiseChain = promiseChain.then(() => this.doTurn(player));
     }
 
+    promiseChain = promiseChain.then(() => {
+      this.state = this.state.toEndGameState();
+      this.view.refresh(this.state);
+    });
+
     return promiseChain;
   }
 
   private doTurn(player: IPlayer): Promise<void> {
     // console.log(handValue(this.state.players.get(player) as Card[]));
 
-    if (handValue(this.state.players.get(player) as Card[]) > 21) {
+    if (this.state.getPlayerHandSum(player) > 21) {
       return Promise.resolve();
     }
 

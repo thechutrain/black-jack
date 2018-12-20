@@ -2,7 +2,6 @@ import { Action } from './action';
 import { Card } from './card';
 import { State } from './state';
 import { IPlayer } from './player';
-import { handValue } from './handvalue';
 import { PlayerState } from './playerstate';
 import { IDeck } from './deck';
 import { GameDeck } from './gamedeck';
@@ -25,12 +24,12 @@ export class Game {
     this.deck.shuffle();
 
     // Deal the cards.
-    this.state = this.state.dealCards();
+    this.state = this.state.dealCards(this.deck);
     this.view.refresh(this.state);
 
     // Make the turns.
     let promiseChain = Promise.resolve();
-    for (const hand of this.state.getPlayerHands()) {
+    for (const hand of this.state.playerHands) {
       promiseChain = promiseChain.then(() => this.doTurn(hand));
     }
 
@@ -54,7 +53,7 @@ export class Game {
         return Promise.resolve();
       }
 
-      this.state = this.state.applyAction(this.deck, this.state, hand, action);
+      this.state = this.state.applyAction(this.deck, hand, action);
       this.view.refresh(this.state);
 
       return this.doTurn(hand);

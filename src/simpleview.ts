@@ -8,11 +8,11 @@ export class SimpleView implements IView {
     const stateEl = document.getElementById('state');
     if (stateEl) {
       stateEl.innerText = '';
-      state.players.forEach((cards: Card[], player: IPlayer) => {
+      state.playerHands.forEach(hand => {
         const newChildEl = document.createElement('div');
-        newChildEl.innerText = `Player '${player.name()}': ${JSON.stringify(
-          cards,
-        )}, ${state.getHandState(player)}`;
+        newChildEl.innerText = `Player '${hand.player.name()}': ${JSON.stringify(
+          hand.cards,
+        )}, ${hand.handState}`;
         stateEl.append(newChildEl);
       });
     }

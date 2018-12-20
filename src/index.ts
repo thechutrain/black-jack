@@ -11,7 +11,7 @@ function main() {
   const game = new Game(
     GameDeck.CREATE_52(),
     State.FROM_PLAYER_LIST([
-      new SlowDelegatingPlayer(new AlwaysPlayer(Action.HIT), 1000),
+      // new SlowDelegatingPlayer(new AlwaysPlayer(Action.HIT), 1000),
       new BrowserPlayer('BrowserPlayer 1'),
       // new BrowserPlayer('BrowserPlayer 2'),
     ]),

@@ -23,7 +23,11 @@ export class Hand {
   }
 
   public addCard(card: Card): Hand {
-    return new Hand(this.player, this.cards.concat(card), this.handState);
+    const newHandState =
+      this.getValue() > 21 ? HandState.BUSTED : HandState.UNKNOWN;
+    const newCards = this.cards.concat(card);
+
+    return new Hand(this.player, newCards, newHandState);
   }
 
   public revealCards(): Hand {
@@ -35,7 +39,10 @@ export class Hand {
   }
 
   public getValue(): number {
-    const hand = this.cards;
+    return this.computeHandValue(this.cards);
+  }
+
+  private computeHandValue(hand: Card[]): number {
     const numAces = hand.filter(c => c.value === CardValue.ACE).length;
     const nonAceValue = hand
       .filter(c => c.value !== CardValue.ACE)

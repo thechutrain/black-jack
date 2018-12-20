@@ -3,7 +3,6 @@ import { IDeck } from './deck';
 import { IPlayer } from './player';
 import { Card } from './card';
 import { Action } from './action';
-import { handValue } from './handvalue';
 import { Hand } from './hand';
 import { HandState } from './handstate';
 import { Dealer } from './dealer';
@@ -11,7 +10,7 @@ import { prependListener } from 'cluster';
 import { SlowDelegatingPlayer } from './slowdelegatingplayer';
 
 export class State {
-  private playerHands: Hand[];
+  public playerHands: Hand[];
   //public players: Map<IPlayer, Hand>;
   //private handStates: Map<IPlayer, HandState>;
   private dealerHand: Hand;
@@ -31,16 +30,11 @@ export class State {
     return new State(playerHands, dealerHand);
   }
 
-  public applyAction(
-    deck: IDeck,
-    prevState: State,
-    playerHand: Hand,
-    action: Action,
-  ): State {
+  public applyAction(deck: IDeck, playerHand: Hand, action: Action): State {
     switch (action) {
       case Action.HIT:
-        const newHand = playerHand.addCard(deck.draw());
-        const newPlayerHand = prevState.playerHands.map(hand => {
+        const newHand = playerHand.addCard(deck.draw().flipFaceUp());
+        const newPlayerHand = this.playerHands.map(hand => {
           if (hand.player === playerHand.player) {
             return newHand;
           } else {
@@ -48,9 +42,9 @@ export class State {
           }
         });
 
-        return new State(newPlayerHand, prevState.dealerHand);
+        return new State(newPlayerHand, this.dealerHand);
       case Action.STAND:
-        return prevState;
+        return this;
       default:
         throw new Error('Unknown action');
     }
@@ -62,10 +56,6 @@ export class State {
       this.playerHands.map(hand => this.dealTwoCards(deck, hand)),
       this.dealTwoCards(deck, this.dealerHand),
     );
-  }
-
-  private dealTwoCards(deck: IDeck, hand: Hand): Hand {
-    return hand.addCard(deck.draw()).addCard(deck.draw().flipFaceUp());
   }
 
   public toEndGameState(): State {
@@ -88,41 +78,12 @@ export class State {
   }
 
   public toPlayerState(currHand: Hand): PlayerState {
-    // const playerCards = this.getPlayerHand(player);
-    // const otherPlayerCards = [];
-    // this.players.forEach((hand, currentPlayer) => {});
     const allOtherHands = this.playerHands.filter(h => h !== currHand);
 
     return new PlayerState(currHand, allOtherHands);
   }
 
-  public getHandState(player: IPlayer): HandState {
-    const handState = this.handStates.get(player);
-    if (!handState) {
-      throw new Error('Player unknown.');
-    }
-
-    return handState;
-  }
-
-  public getPlayerHandSum(player: IPlayer) {
-    return handValue(this.getPlayerHand(player));
-  }
-
-  public totalCardsPlayed(): number {
-    let sum = 0;
-    this.players.forEach((cards, player) => {
-      sum += cards.length;
-    });
-
-    return sum;
-  }
-
-  public getDealerHandSum(): number {
-    return this.getPlayerHandSum(this.dealer);
-  }
-
-  public getPlayerHands(): Hand[] {
-    return this.playerHands;
+  private dealTwoCards(deck: IDeck, hand: Hand): Hand {
+    return hand.addCard(deck.draw()).addCard(deck.draw().flipFaceUp());
   }
 }

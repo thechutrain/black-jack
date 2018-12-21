@@ -63,9 +63,12 @@ export class State {
       if (hand.player === this.dealerHand.player) {
         return hand;
       }
-      if (hand.handState === HandState.BUSTED) {
+      if (hand.getValue() > 21) {
+        hand.handState = HandState.BUSTED;
+
         return hand;
       }
+
       const newState =
         hand.getValue() > this.dealerHand.getValue()
           ? HandState.WON

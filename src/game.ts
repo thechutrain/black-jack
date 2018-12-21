@@ -56,7 +56,16 @@ export class Game {
       this.state = this.state.applyAction(this.deck, hand, action);
       this.view.refresh(this.state);
 
-      return this.doTurn(hand);
+      // find the previous hand in the new state:
+      const newHand = this.state.playerHands.filter(
+        h => h.player === hand.player,
+      );
+
+      if (newHand.length !== 1) {
+        throw new Error('Found more than one related hands');
+      }
+
+      return this.doTurn(newHand[0]);
     });
   }
 }

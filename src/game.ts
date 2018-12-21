@@ -1,6 +1,7 @@
 import { Action } from './action';
 import { Card } from './card';
 import { State } from './state';
+import { HandState } from './handstate';
 import { IPlayer } from './player';
 import { PlayerState } from './playerstate';
 import { IDeck } from './deck';
@@ -30,7 +31,7 @@ export class Game {
     // Make the turns.
     let promiseChain = Promise.resolve();
     for (const hand of this.state.playerHands) {
-      promiseChain = promiseChain.then(() => this.doTurn(hand));
+      promiseChain = promiseChain.then(() => this.doTurn(hand.player));
     }
 
     promiseChain = promiseChain.then(() => {
@@ -41,22 +42,16 @@ export class Game {
     return promiseChain;
   }
 
-  private doTurn(hand: Hand): Promise<void> {
-    // console.log(handValue(this.state.players.get(player) as Card[]));
-
-    if (hand.getValue() > 21) {
-      return Promise.resolve();
-    }
-
-    return hand.player.act(this.state.toPlayerState(hand)).then(action => {
+  private doTurn(player: IPlayer): Promise<void> {
+    return player.act(this.state.toPlayerState(player)).then(action => {
       if (action === Action.STAND) {
         return Promise.resolve();
       }
 
-      this.state = this.state.applyAction(this.deck, hand, action);
+      this.state = this.state.applyAction(this.deck, player, action);
       this.view.refresh(this.state);
 
-      return this.doTurn(hand);
+      return this.doTurn(player);
     });
   }
 }

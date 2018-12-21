@@ -23,9 +23,10 @@ export class Hand {
   }
 
   public addCard(card: Card): Hand {
-    const newHandState =
-      this.getValue() > 21 ? HandState.BUSTED : HandState.UNKNOWN;
     const newCards = this.cards.concat(card);
+    const newHandState = this.computeHandValue(newCards) > 21
+        ? HandState.BUSTED
+        : HandState.UNKNOWN;
 
     return new Hand(this.player, newCards, newHandState);
   }

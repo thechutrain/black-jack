@@ -30,16 +30,13 @@ export class State {
     return new State(playerHands, dealerHand);
   }
 
-  public applyAction(deck: IDeck, playerHand: Hand, action: Action): State {
+  public applyAction(deck: IDeck, player: IPlayer, action: Action): State {
     switch (action) {
       case Action.HIT:
-        const newHand = playerHand.addCard(deck.draw().flipFaceUp());
         const newPlayerHand = this.playerHands.map(hand => {
-          if (hand.player === playerHand.player) {
-            return newHand;
-          } else {
-            return hand;
-          }
+          return hand.player === player
+              ? hand.addCard(deck.draw().flipFaceUp())
+              : hand;
         });
 
         return new State(newPlayerHand, this.dealerHand);
@@ -77,8 +74,12 @@ export class State {
     return new State(newHands, this.dealerHand);
   }
 
-  public toPlayerState(currHand: Hand): PlayerState {
-    const allOtherHands = this.playerHands.filter(h => h !== currHand);
+  public toPlayerState(player: IPlayer): PlayerState {
+    const allOtherHands = this.playerHands.filter(h => h.player !== player);
+    const currHand = this.playerHands.find(h => h.player === player);
+    if (!currHand) {
+      throw new Error('Unknown player!');
+    }
 
     return new PlayerState(currHand, allOtherHands);
   }

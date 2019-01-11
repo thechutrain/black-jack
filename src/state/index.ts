@@ -1,13 +1,12 @@
+import { IDeck } from '../models/deck';
+import { IPlayer, SlowDelegatingPlayer, Dealer } from '../models/player';
+import { Hand, HandState } from '../models/hand';
+// import { Card } from '../card';
+import { Action } from '../action';
 import { PlayerState } from './playerstate';
-import { IDeck } from './deck';
-import { IPlayer } from './player';
-import { Card } from './card';
-import { Action } from './action';
-import { Hand } from './hand';
-import { HandState } from './handstate';
-import { Dealer } from './dealer';
-import { prependListener } from 'cluster';
-import { SlowDelegatingPlayer } from './slowdelegatingplayer';
+export { PlayerState } from './playerstate';
+// export { HandState } from '../models/hand/handstate';
+// import { prependListener } from 'cluster';
 
 export class State {
   public playerHands: Hand[];
@@ -35,8 +34,8 @@ export class State {
       case Action.HIT:
         const newPlayerHand = this.playerHands.map(hand => {
           return hand.player === player
-              ? hand.addCard(deck.draw().flipFaceUp())
-              : hand;
+            ? hand.addCard(deck.draw().flipFaceUp())
+            : hand;
         });
 
         return new State(newPlayerHand, this.dealerHand);
@@ -84,6 +83,16 @@ export class State {
     return new PlayerState(currHand, allOtherHands);
   }
 
+  public isGameOver(): boolean {
+    let gameOver = true;
+    this.playerHands.forEach((playerHand: Hand) => {
+      if (playerHand.handState === HandState.UNKNOWN) {
+        gameOver = false;
+      }
+    });
+
+    return gameOver;
+  }
   private dealTwoCards(deck: IDeck, hand: Hand): Hand {
     return hand.addCard(deck.draw()).addCard(deck.draw().flipFaceUp());
   }

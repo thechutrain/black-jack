@@ -1,7 +1,8 @@
-import { IPlayer } from './player';
-import { HiddenCard } from './hiddencard';
-import { Card, CardValue } from './card';
+import { IPlayer } from '../player';
+import { Card, CardValue } from '../card';
 import { HandState } from './handstate';
+
+export { HandState };
 
 export class Hand {
   public player: IPlayer;
@@ -24,7 +25,8 @@ export class Hand {
 
   public addCard(card: Card): Hand {
     const newCards = this.cards.concat(card);
-    const newHandState = this.computeHandValue(newCards) > 21
+    const newHandState =
+      this.computeHandValue(newCards) > 21
         ? HandState.BUSTED
         : HandState.UNKNOWN;
 

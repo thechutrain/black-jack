@@ -1,11 +1,12 @@
-import { Card } from './card';
-import { IPlayer } from './player';
-import { IView } from './view';
-import { State } from './state';
+import { Card } from '../models/card';
+// import { IPlayer } from '../player';
+import { IView } from './index';
+import { State } from '../state';
 
 export class SimpleView implements IView {
   public refresh(state: State): void {
     const stateEl = document.getElementById('state');
+    const gameStatusEl = document.getElementById('game-status');
     if (stateEl) {
       stateEl.innerText = '';
       state.playerHands.forEach(hand => {
@@ -15,6 +16,10 @@ export class SimpleView implements IView {
         )}, ${hand.handState}`;
         stateEl.append(newChildEl);
       });
+    }
+
+    if (state.isGameOver() && gameStatusEl) {
+      gameStatusEl.innerText = 'Game Over!';
     }
   }
 }

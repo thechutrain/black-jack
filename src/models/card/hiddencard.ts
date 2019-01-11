@@ -1,4 +1,4 @@
-import { Card } from './card';
+import { Card } from './';
 
 export class HiddenCard {
   private facedownCard: Card;

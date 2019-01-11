@@ -1,6 +1,6 @@
 // import { Card } from './card';
 // import { HiddenCard } from './hiddencard';
-import { Hand } from './hand';
+import { Hand } from '../models/hand';
 // import { PlayerHand } from './playerHand';
 
 export class PlayerState {

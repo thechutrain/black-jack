@@ -1,6 +1,6 @@
-import { IPlayer } from './player';
-import { PlayerState } from './playerstate';
-import { Action } from './action';
+import { IPlayer } from '.';
+import { PlayerState } from '../../state';
+import { Action } from '../../action';
 
 export class BrowserPlayer implements IPlayer {
   private playerName: string;

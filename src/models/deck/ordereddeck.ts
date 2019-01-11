@@ -1,5 +1,5 @@
-import { IDeck } from './deck';
-import { Card } from './card';
+import { IDeck } from '.';
+import { Card } from '../card';
 
 export class OrderedDeck implements IDeck {
   private cards: Card[];

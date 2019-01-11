@@ -1,14 +1,14 @@
 import { Action } from './action';
-import { Card } from './card';
+// import { Card } from './card';
 import { State } from './state';
-import { HandState } from './handstate';
-import { IPlayer } from './player';
-import { PlayerState } from './playerstate';
-import { IDeck } from './deck';
-import { GameDeck } from './gamedeck';
+// import { HandState, PlayerState } from './state';
+import { IPlayer } from './models/player';
+import { IDeck } from './models/deck';
+// import { GameDeck } from './gamedeck';
 import { IView } from './view';
-import { debug } from 'util';
-import { Hand } from './hand';
+import { HandState } from './models/hand';
+// import { debug } from 'util';
+// import { Hand } from './hand';
 
 export class Game {
   public deck: IDeck;
@@ -43,15 +43,22 @@ export class Game {
   }
 
   private doTurn(player: IPlayer): Promise<void> {
-    return player.act(this.state.toPlayerState(player)).then(action => {
-      if (action === Action.STAND) {
-        return Promise.resolve();
-      }
+    // const player = await player.act(this.state.toPlayerState(player));
+    const isBusted =
+      this.state.toPlayerState(player).playerCards.handState ===
+      HandState.BUSTED;
 
-      this.state = this.state.applyAction(this.deck, player, action);
-      this.view.refresh(this.state);
+    return isBusted
+      ? Promise.resolve()
+      : player.act(this.state.toPlayerState(player)).then(action => {
+          if (action === Action.STAND) {
+            return Promise.resolve();
+          }
 
-      return this.doTurn(player);
-    });
+          this.state = this.state.applyAction(this.deck, player, action);
+          this.view.refresh(this.state);
+
+          return this.doTurn(player);
+        });
   }
 }

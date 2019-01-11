@@ -1,5 +1,5 @@
-import { IPlayer } from './player';
-import { Action } from './action';
+import { IPlayer } from '.';
+import { Action } from '../../action';
 
 export class AlwaysPlayer implements IPlayer {
   private playerAction: Action;

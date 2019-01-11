@@ -1,5 +1,5 @@
-import { IDeck } from './deck';
-import { Card, ALL_CARD_VALUES, ALL_SUITS } from './card';
+import { IDeck } from '.';
+import { Card, ALL_CARD_VALUES, ALL_SUITS } from '../card';
 
 export class GameDeck implements IDeck {
   public cards: Card[];
